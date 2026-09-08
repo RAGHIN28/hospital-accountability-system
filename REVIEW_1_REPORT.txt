@@ -1,0 +1,111 @@
+PROJECT TITLE:
+Shared-Account Elimination Workflow Using Accountable Delegation and Session Attribution for a Hospital
+
+1. PROJECT OVERVIEW
+Hospital clinical workstations (Radiology, Lab, Pharmacy, Wards, Billing, IT) routinely use shared logins (radiology_shared, lab_shared, pharmacy_shared, ward_shared, billing_shared, admin_shared) across permanent, visiting, intern, and contractor staff for shift handoffs. When sensitive actions occur (ePHI access, lab edits, prescription changes, record exports), audit logs record only generic shared accounts, destroying non-repudiation and accountability.
+
+This project delivers a working proof of concept for an Accountable Delegation and Session Attribution Pipeline. By correlating shift delegations, session bindings, device fingerprints, and subnets, the system attributes sensitive actions to individual human identities with calibrated confidence and transparent audit explanations.
+
+For Review 1 (35% milestone), the project establishes core data models, shared account inventory, shift delegations, synthetic multi-department data, event ingestion with SHA-256 deduplication, baseline attribution, prototype multi-signal attribution, comparative metrics, FastAPI backend, SOC web dashboard, and automated tests.
+
+2. COMPLETED SO FAR
+- User Roster: 18 synthetic staff across 4 workforce categories in 7 departments.
+- Workforce Categories: Modeled permanent, visiting, intern, and contractor staff.
+- Shared Accounts: 6 clinical accounts across 6 hospital subsystems with risk levels.
+- Delegation Registry: 26 shift delegations mapping staff to shared accounts.
+- Synthetic Hospital Data: 364 system events across 4 days with 205 sensitive clinical actions.
+- Event Ingestion: Validates fields and blocks duplicates via SHA-256 payload hashing.
+- Privileged Actions: Catalog of 10 sensitive clinical and admin operation types.
+- Database Models: SQLite schema via SQLAlchemy ORM across 6 core tables.
+- Baseline Attribution: Shift-count rule (1 user=attributed, >1=ambiguous, 0=unattributed).
+- Session Attribution: Multi-signal scoring across delegation, session, device, subnet, dept.
+- Evidence Scoring: Delegation (40), session (30), device (15), subnet (10), dept (5).
+- Confidence Scoring: High (80-100), Medium (60-79), Low (40-59), Unattributed/Ambiguous.
+- Attribution Explanation: Per-event audit trail detailing matched signals and failure causes.
+- Attribution Metric: Formula quantifying percentage of sensitive actions attributed.
+- Backend APIs: FastAPI REST service with 10 operational endpoints.
+- Frontend Dashboard: SOC web UI with 5 tabs (Overview, Accounts, Events, Comparison, Roster).
+- Event Explorer & Modal: Searchable log table with filters and evidence inspection modal.
+- Automated Tests: 11 passing unit tests covering logic, edge cases, formulas (100% pass).
+
+3. KEY FEATURES / MODULES COMPLETED
+- User Management (app/models/user.py): Staff records with role, dept, status, category.
+- Shared Accounts (app/models/shared_account.py): Tracks workstations, host systems, risk levels.
+- Delegation Registry (app/models/authorization.py): Tracks shift authorization windows and approvers.
+- Log Processing (app/services/event_processor.py): Ingests events, computes SHA-256 hash, blocks duplicates.
+- Privileged Action Detection (app/models/privileged_action.py): Catalogs 10 high-risk clinical operations.
+- Baseline Engine (app/services/baseline.py): Shift count: 1 delegate=Attributed (60%), >1=Ambiguous (30%), 0=Unattributed (0%).
+- Prototype Engine (app/services/attribution.py): 5-signal weighted scoring; ties within 10 pts flag Ambiguous.
+- Metrics Service (app/services/metrics.py): Computes attribution rates, net lift, confidence tiers, failure reasons.
+
+Implemented Pipeline:
+Data Sources -> Ingestion/Deduplication -> Shared Account Detection -> Candidate Scoring -> Attribution Engines -> Metrics Service -> SOC Dashboard/API.
+
+4. CURRENTLY WORKING
+- Backend REST API (FastAPI): Working
+- Database (SQLite with SQLAlchemy ORM): Working
+- Synthetic Hospital Data Generator: Working
+- User Roster & Workforce Categories: Working
+- Shared-Account Inventory: Working
+- Shift Delegation Registry: Working
+- Privileged Action Detection: Working
+- Event Processing & Duplicate Rejection: Working
+- Baseline Attribution Engine: Working
+- Prototype Multi-Signal Attribution Engine: Working
+- Comparative Metrics Calculation: Working
+- SOC Web Dashboard (5 Tabs + Detail Modal): Working
+- Automated Unit Tests (pytest, 11/11 passing): Working
+- Missing Session ID Resilience: Working
+- Inactive User Disqualification: Working
+- Delayed / Out-of-Order Event Handling: Under development
+- Self-Service Delegation Request Portal: Planned
+
+5. CURRENT RESULTS / MEASUREMENTS
+Actual measurements from active database and test suite:
+- Total Hospital Users: 18 (Permanent: 8, Visiting: 4, Intern: 3, Outsourced: 3)
+- Monitored Shared Accounts: 6
+- Shift Delegation Records: 26
+- Privileged Action Types: 10
+- Total Ingested System Events: 364
+- Total Sensitive Clinical Actions: 205 (56.32% of total events)
+- Baseline Attributed: 90 | Ambiguous: 17 | Unattributed: 98
+- Baseline Attribution Percentage: 43.90%
+- Prototype Attributed: 203 | Ambiguous: 1 | Unattributed: 1
+- Prototype Attribution Percentage: 99.02%
+- Net Attribution Improvement (Lift): +55.12%
+- Prototype Confidence: High (80-100): 74 | Medium (60-79): 129 | Low: 0 | Unattributed: 1 | Ambiguous: 1
+- Prototype Methods: Session + Delegation: 72 | Session Match: 97 | Delegation Match: 32 | Direct Account: 2 | Unresolved: 2
+- Failure Reasons: Multiple authorized users (competing evidence within 10 pts): 1 event; Expired authorization: 1 event
+- Automated Unit Tests: 11 passed in 0.80s (100% pass rate)
+
+Metric Calculation:
+Attribution Percentage = (Attributed Sensitive Actions / Total Sensitive Actions) * 100. Routine events (USER_LOGIN) are excluded from the denominator to measure accountability strictly over sensitive actions.
+
+6. PENDING WORK
+- Delayed-event handling and retroactive shift buffering
+- Out-of-order event stream sequencing and reconciliation
+- Duplicate-event replay injection and flood stress testing
+- Telemetry failure benchmarks with missing IP/device data
+- Self-service delegation portal with approval workflows
+- Real-time streaming ingestion (Syslog, Kafka, Webhooks)
+- Enterprise identity provider integration (LDAP, AD, SAML)
+- Clinical error analysis on edge-case ambiguities
+- Usability validation with clinical informatics staff
+- Production checklist and HIPAA audit trail hardening
+
+7. NEXT STEPS
+1. Implement delayed-event buffer and retroactive shift reconciliation.
+2. Develop out-of-order event sorting and state reconstruction.
+3. Conduct duplicate-event injection experiments for replay resilience.
+4. Execute telemetry failure benchmarks with missing network feeds.
+5. Build self-service shift delegation and approval UI.
+6. Conduct forensic analysis on ambiguous and off-shift events.
+7. Perform usability validation with hospital IT stakeholders.
+8. Complete security hardening and HIPAA § 164.312(b) audit alignment.
+9. Finalize end-to-end demo and technical documentation.
+
+8. 35% REVIEW STATUS
+- Implementation Maturity: Proof of concept (Phase 1). Data models, dual attribution engines, deduplication, metrics, REST API, web UI, and tests are functional.
+- Milestone Assessment: The project has achieved the 35% milestone. Core attribution logic and system architecture are operational and verified.
+- Demonstrable Features: Operational full-stack system with FastAPI, SQLite, SOC dashboard showing baseline vs prototype attribution (43.90% vs 99.02%), event modal, and 11 passing tests.
+- Remaining Scope: The remaining 65% focuses on stream resilience (delayed/out-of-order events), missing telemetry experiments, self-service delegation, stakeholder validation, and HIPAA hardening.

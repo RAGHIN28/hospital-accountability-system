@@ -1,0 +1,7 @@
+id,username,system_name,department,account_type,status,risk_level,created_at
+1,radiology_shared,PACS / RIS Core,Radiology,DEPARTMENTAL_WORKSTATION,ACTIVE,HIGH,2026-08-01 09:00:00
+2,lab_shared,Laboratory Information System (LIS),Laboratory,DEPARTMENTAL_WORKSTATION,ACTIVE,HIGH,2026-08-01 09:00:00
+3,pharmacy_shared,Pharmacy Dispensing & Inventory,Pharmacy,CLINICAL_PORTAL,ACTIVE,HIGH,2026-08-01 09:00:00
+4,billing_shared,Hospital Revenue & Invoicing POS,Billing,FINANCIAL_TERMINAL,ACTIVE,MEDIUM,2026-08-01 09:00:00
+5,ward_shared,Inpatient Ward Clinical EMR,Ward,NURSE_STATION,ACTIVE,HIGH,2026-08-01 09:00:00
+6,admin_shared,Hospital Enterprise Administration,IT Support,SYSTEM_ADMIN,ACTIVE,CRITICAL,2026-08-01 09:00:00

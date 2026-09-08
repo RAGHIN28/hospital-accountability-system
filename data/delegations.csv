@@ -1,0 +1,27 @@
+id,shared_account_id,user_id,authorized_from,authorized_until,reason,approved_by,status
+1,1,3,2026-09-01 08:00:00,2026-09-01 16:00:00,Morning Radiology Tech Shift,Dr. Priya Menon,ACTIVE
+2,1,2,2026-09-01 14:00:00,2026-09-01 18:00:00,Specialist CT/MRI Review Shift (Overlap with Tech),Medical Director,ACTIVE
+3,1,3,2026-09-02 08:00:00,2026-09-02 16:00:00,Morning Radiology Shift,Dr. Priya Menon,ACTIVE
+4,1,5,2026-09-02 16:00:00,2026-09-02 23:00:00,Evening Resident On-Call Shift,Dr. Priya Menon,ACTIVE
+5,1,3,2026-09-03 09:00:00,2026-09-03 17:00:00,Day Ultrasound & X-Ray Shift,Dr. Priya Menon,ACTIVE
+6,1,5,2026-09-03 10:00:00,2026-09-03 15:00:00,Resident Fluoroscopy Training Shift,Dr. Priya Menon,ACTIVE
+7,1,17,2026-09-03 11:00:00,2026-09-03 14:00:00,Emergency Trauma Overflow Support,Dr. Priya Menon,ACTIVE
+8,2,4,2026-09-01 07:00:00,2026-09-01 15:00:00,Morning Diagnostic Batch Processing,Dr. Rajesh Varma,ACTIVE
+9,2,8,2026-09-01 11:00:00,2026-09-01 14:00:00,Histopathology Report Sign-off Shift,Medical Director,ACTIVE
+10,2,4,2026-09-02 07:00:00,2026-09-02 15:00:00,Morning Lab Shift,Dr. Rajesh Varma,ACTIVE
+11,2,14,2026-09-02 13:00:00,2026-09-02 17:00:00,Analyzer Calibration & Maintenance,Dr. Rajesh Varma,ACTIVE
+12,3,7,2026-09-01 08:00:00,2026-09-01 16:00:00,General Outpatient Pharmacy Shift,Chief Pharmacist,ACTIVE
+13,3,13,2026-09-01 14:00:00,2026-09-01 20:00:00,Evening Inpatient Dispensing Shift,Ananya Sharma,ACTIVE
+14,3,7,2026-09-02 08:00:00,2026-09-02 16:00:00,Outpatient Pharmacy Shift,Chief Pharmacist,ACTIVE
+15,3,13,2026-09-02 15:00:00,2026-09-02 21:00:00,Evening Dispensing Shift,Ananya Sharma,ACTIVE
+16,4,9,2026-09-01 08:00:00,2026-09-01 16:00:00,Discharge Counter Shift,Finance Head,ACTIVE
+17,4,10,2026-09-01 12:00:00,2026-09-01 20:00:00,Afternoon Cashier & Settlement,Finance Head,ACTIVE
+18,4,9,2026-09-02 08:00:00,2026-09-02 16:00:00,Discharge Counter Shift,Finance Head,ACTIVE
+19,5,11,2026-09-01 07:00:00,2026-09-01 15:00:00,Ward A Supervisor Shift,Nursing Director,ACTIVE
+20,5,12,2026-09-01 15:00:00,2026-09-01 23:00:00,Ward A Night Monitoring Shift,Sister Mary Thomas,ACTIVE
+21,5,11,2026-09-02 07:00:00,2026-09-02 15:00:00,Ward A Supervisor Shift,Nursing Director,ACTIVE
+22,5,12,2026-09-02 15:00:00,2026-09-02 23:00:00,Ward A Evening Shift,Sister Mary Thomas,ACTIVE
+23,6,6,2026-09-01 10:00:00,2026-09-01 14:00:00,PACS Server Security Patching Window,IT Director,ACTIVE
+24,6,16,2026-09-02 11:00:00,2026-09-02 13:00:00,Firewall & Role Policy Audit,IT Director,ACTIVE
+25,1,17,2026-08-26 16:00:00,2026-08-26 08:00:00,Previous Month Temporary Shift,Dr. Priya Menon,EXPIRED
+26,2,18,2026-08-11 16:00:00,2026-08-11 08:00:00,Terminated Associate Access,Dr. Rajesh Varma,REVOKED

@@ -1,0 +1,19 @@
+id,employee_id,full_name,role,workforce_type,department,active,created_at
+1,EMP001,Dr. Arun Kumar,Senior Consultant,Visiting Consultant,Cardiology,True,2026-08-01 09:00:00
+2,EMP002,Dr. Priya Menon,Chief Radiologist,Visiting Consultant,Radiology,True,2026-08-01 09:00:00
+3,EMP003,Ravi Kumar,Radiology Technologist,Permanent Staff,Radiology,True,2026-08-01 09:00:00
+4,EMP004,Meena Joseph,Senior Lab Technician,Permanent Staff,Laboratory,True,2026-08-01 09:00:00
+5,EMP005,Karthik Raj,Radiology Resident Intern,Intern,Radiology,True,2026-08-01 09:00:00
+6,EMP006,Suresh Babu,Systems Infrastructure Specialist,Outsourced Technician,IT Support,True,2026-08-01 09:00:00
+7,EMP007,Ananya Sharma,Clinical Pharmacist,Permanent Staff,Pharmacy,True,2026-08-01 09:00:00
+8,EMP008,Dr. Rajesh Varma,Consultant Pathologist,Visiting Consultant,Laboratory,True,2026-08-01 09:00:00
+9,EMP009,Deepa Nair,Senior Billing Officer,Permanent Staff,Billing,True,2026-08-01 09:00:00
+10,EMP010,Vikram Singh,Billing Associate,Intern,Billing,True,2026-08-01 09:00:00
+11,EMP011,Sister Mary Thomas,Head Nurse Supervisor,Permanent Staff,Ward,True,2026-08-01 09:00:00
+12,EMP012,Sunil Patil,Staff Nurse,Permanent Staff,Ward,True,2026-08-01 09:00:00
+13,EMP013,Pooja Hegde,Pharmacy Assistant,Intern,Pharmacy,True,2026-08-01 09:00:00
+14,EMP014,Dinesh Chandran,Biomedical Equipment Specialist,Outsourced Technician,Laboratory,True,2026-08-01 09:00:00
+15,EMP015,Dr. Kavita Desai,Consultant Cardiologist,Visiting Consultant,Cardiology,True,2026-08-01 09:00:00
+16,EMP016,Naveen George,Network & Security Analyst,Outsourced Technician,IT Support,True,2026-08-01 09:00:00
+17,EMP017,Lakshmi Narayanan,Radiology Staff Assistant,Permanent Staff,Radiology,True,2026-08-01 09:00:00
+18,EMP018,Rohan Gupta,Former Lab Assistant,Permanent Staff,Laboratory,False,2026-08-01 09:00:00

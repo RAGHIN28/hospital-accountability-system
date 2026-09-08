@@ -1,0 +1,11 @@
+id,action_name,sensitivity_level,description
+1,VIEW_PATIENT_RECORD,HIGH,Access detailed electronic protected health information (ePHI)
+2,EDIT_PATIENT_RECORD,CRITICAL,"Alter medical history, clinical notes, or admission demographics"
+3,EXPORT_PATIENT_RECORD,CRITICAL,Bulk export or download of clinical health records
+4,MODIFY_LAB_RESULT,CRITICAL,Change clinical diagnostic test values or reference ranges
+5,APPROVE_LAB_RESULT,HIGH,Sign off and officially release laboratory diagnostic reports
+6,MODIFY_PRESCRIPTION,CRITICAL,"Adjust medication dosage, drug compound, or prescription route"
+7,DISPENSE_MEDICATION,HIGH,Authorize medication release from central pharmacy storage
+8,CHANGE_USER_ROLE,CRITICAL,Elevate or alter system role permissions and access rights
+9,CHANGE_SYSTEM_CONFIGURATION,CRITICAL,"Modify critical infrastructure, PACS routing, or audit settings"
+10,DELETE_RECORD,CRITICAL,Purge or soft-delete patient or billing transaction records

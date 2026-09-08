@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hospital SOC | Shared-Account Attribution & Delegation Engine</title>
+  <meta name="description" content="Cybersecurity operational dashboard for accountable delegation and session attribution across hospital shared accounts." />
+  <link rel="stylesheet" href="/style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="dark-theme">
+  <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="nav-brand">
+      <div class="brand-icon">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="M12 8v4"/>
+          <path d="M12 16h.01"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="brand-title">Hospital Identity & Attribution SOC</h1>
+        <span class="brand-subtitle">Accountable Delegation & Session Attribution &bull; 35% Milestone PoC</span>
+      </div>
+    </div>
+    
+    <div class="nav-controls">
+      <div class="system-status-badge pulse-active" id="system-status-indicator">
+        <span class="status-dot"></span>
+        <span id="system-status-text">SOC ONLINE</span>
+      </div>
+      <button class="btn btn-secondary" id="btn-reprocess" title="Execute Attribution Pipeline on All Events">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
+        </svg>
+        <span>Reprocess Events</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Navigation Tabs -->
+  <nav class="tab-nav">
+    <div class="tab-container">
+      <button class="tab-btn active" data-tab="dashboard">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Executive Overview
+      </button>
+      <button class="tab-btn" data-tab="shared-accounts">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Shared Accounts
+      </button>
+      <button class="tab-btn" data-tab="events">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Event Explorer
+      </button>
+      <button class="tab-btn" data-tab="comparison">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Attribution Comparison
+      </button>
+      <button class="tab-btn" data-tab="users">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+        Roster & Delegations
+      </button>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="content-wrapper">
+
+    <!-- TAB 1: EXECUTIVE DASHBOARD -->
+    <section id="tab-dashboard" class="tab-pane active">
+      <!-- High Impact Metric Cards -->
+      <div class="metrics-grid">
+        <div class="metric-card glow-cyan">
+          <div class="metric-label">Hospital Users</div>
+          <div class="metric-val" id="metric-users">--</div>
+          <div class="metric-sub">Across 7 Departments</div>
+        </div>
+
+        <div class="metric-card glow-amber">
+          <div class="metric-label">Shared Accounts</div>
+          <div class="metric-val" id="metric-shared-accounts">--</div>
+          <div class="metric-sub">Monitored Stations</div>
+        </div>
+
+        <div class="metric-card glow-blue">
+          <div class="metric-label">Total System Events</div>
+          <div class="metric-val" id="metric-total-events">--</div>
+          <div class="metric-sub">Raw Ingested Logs</div>
+        </div>
+
+        <div class="metric-card glow-purple">
+          <div class="metric-label">Sensitive Clinical Actions</div>
+          <div class="metric-val" id="metric-sensitive-actions">--</div>
+          <div class="metric-sub">ePHI & Prescriptions</div>
+        </div>
+
+        <div class="metric-card glow-red">
+          <div class="metric-label">Baseline Attribution</div>
+          <div class="metric-val text-dim" id="metric-baseline-pct">--%</div>
+          <div class="metric-sub">Shift-count only rule</div>
+        </div>
+
+        <div class="metric-card glow-green highlight-card">
+          <div class="metric-label">Prototype Attribution</div>
+          <div class="metric-val text-green" id="metric-prototype-pct">--%</div>
+          <div class="metric-sub">Multi-Signal Weighted Engine</div>
+        </div>
+
+        <div class="metric-card glow-emerald highlight-card">
+          <div class="metric-label">Attribution Lift</div>
+          <div class="metric-val text-emerald" id="metric-improvement-pct">+--%</div>
+          <div class="metric-sub">Net Accountability Gain</div>
+        </div>
+      </div>
+
+      <!-- Core Comparative Visual & Attribution Pipeline -->
+      <div class="dashboard-split">
+        <!-- Comparative Progress Cards -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Attribution Efficiency Comparison</h2>
+            <span class="badge badge-accent">Sensitive Actions Only</span>
+          </div>
+          <div class="comparison-bars-container">
+            <div class="comp-bar-group">
+              <div class="comp-bar-header">
+                <span class="engine-title">1. Baseline Method (Simple Shift-Count)</span>
+                <span class="engine-score" id="bar-base-text">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-baseline" id="bar-base-fill" style="width: 0%;"></div>
+              </div>
+              <div class="comp-breakdown" id="base-breakdown-text">
+                Attributed: <b id="base-attr-cnt">0</b> | Ambiguous: <b id="base-amb-cnt">0</b> | Unattributed: <b id="base-unattr-cnt">0</b>
+              </div>
+            </div>
+
+            <div class="comp-bar-group">
+              <div class="comp-bar-header">
+                <span class="engine-title">2. Prototype Multi-Signal Engine (Session + Delegation + Network)</span>
+                <span class="engine-score text-green" id="bar-proto-text">0%</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill fill-prototype" id="bar-proto-fill" style="width: 0%;"></div>
+              </div>
+              <div class="comp-breakdown" id="proto-breakdown-text">
+                Attributed: <b class="text-green" id="proto-attr-cnt">0</b> | Ambiguous: <b class="text-amber" id="proto-amb-cnt">0</b> | Unattributed: <b class="text-red" id="proto-unattr-cnt">0</b>
+              </div>
+            </div>
+          </div>
+
+          <!-- Architecture Callout -->
+          <div class="architecture-callout">
+            <div class="arch-step">
+              <span class="step-num">1</span>
+              <div>
+                <strong>Delegation Match (+40)</strong>
+                <p>Verifies active shift authorization window</p>
+              </div>
+            </div>
+            <div class="arch-arrow">&rarr;</div>
+            <div class="arch-step">
+              <span class="step-num">2</span>
+              <div>
+                <strong>Session Match (+30)</strong>
+                <p>Binds session token to user identity</p>
+              </div>
+            </div>
+            <div class="arch-arrow">&rarr;</div>
+            <div class="arch-step">
+              <span class="step-num">3</span>
+              <div>
+                <strong>Network Match (+25)</strong>
+                <p>Device (+15) and IP subnet (+10) validation</p>
+              </div>
+            </div>
+            <div class="arch-arrow">&rarr;</div>
+            <div class="arch-step">
+              <span class="step-num">4</span>
+              <div>
+                <strong>Dept Affiliation (+5)</strong>
+                <p>Matches departmental workstation profile</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Failure Reasons & Confidence Distribution -->
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Attribution Failure Analysis</h2>
+            <span class="badge badge-warning">Audit Gap Diagnostics</span>
+          </div>
+          <div class="failure-reasons-list" id="failure-reasons-container">
+            <div class="loading-spinner">Analyzing failure breakdown...</div>
+          </div>
+
+          <div class="panel-header mt-4">
+            <h2>Confidence Level Distribution</h2>
+          </div>
+          <div class="confidence-chips" id="confidence-chips-container">
+            <!-- Chips rendered dynamically -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 2: SHARED ACCOUNTS INVENTORY -->
+    <section id="tab-shared-accounts" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Shared Account Inventory</h2>
+            <p class="panel-subtitle">Target clinical workstations and shared accounts requiring elimination/delegated attribution</p>
+          </div>
+        </div>
+        <div class="cards-grid" id="shared-accounts-grid">
+          <div class="loading-spinner">Loading shared accounts...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 3: EVENT EXPLORER -->
+    <section id="tab-events" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>System Audit Events</h2>
+            <p class="panel-subtitle">Filterable log events with automated attribution verdicts and confidence scores</p>
+          </div>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label>Shared Account</label>
+            <select id="filter-account" class="input-select">
+              <option value="">All Accounts</option>
+              <option value="radiology_shared">radiology_shared</option>
+              <option value="lab_shared">lab_shared</option>
+              <option value="pharmacy_shared">pharmacy_shared</option>
+              <option value="billing_shared">billing_shared</option>
+              <option value="ward_shared">ward_shared</option>
+              <option value="admin_shared">admin_shared</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Action Sensitivity</label>
+            <select id="filter-sensitivity" class="input-select">
+              <option value="">All Actions</option>
+              <option value="sensitive">Sensitive Only</option>
+              <option value="non-sensitive">Non-Sensitive Only</option>
+            </select>
+          </div>
+
+          <div class="filter-group">
+            <label>Search Action / User</label>
+            <input type="text" id="filter-search" class="input-text" placeholder="Filter by action name..." />
+          </div>
+
+          <button class="btn btn-primary" id="btn-apply-filters">Filter Events</button>
+        </div>
+
+        <!-- Events Table -->
+        <div class="table-container">
+          <table class="data-table" id="events-table">
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Timestamp</th>
+                <th>Account</th>
+                <th>Action</th>
+                <th>Source IP / Device</th>
+                <th>Attributed User</th>
+                <th>Confidence</th>
+                <th>Method</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="events-table-body">
+              <tr><td colspan="9" class="text-center">Loading event logs...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 4: ATTRIBUTION COMPARISON -->
+    <section id="tab-comparison" class="tab-pane">
+      <div class="panel">
+        <div class="panel-header">
+          <div>
+            <h2>Baseline vs Prototype Comparative Audit</h2>
+            <p class="panel-subtitle">Direct side-by-side evaluation showing cases resolved by Prototype where Baseline was ambiguous or unattributed</p>
+          </div>
+        </div>
+        <div class="table-container">
+          <table class="data-table" id="comparison-table">
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Timestamp</th>
+                <th>Shared Account</th>
+                <th>Clinical Action</th>
+                <th>Baseline Verdict</th>
+                <th>Prototype Verdict</th>
+                <th>Confidence</th>
+                <th>Key Resolving Evidence</th>
+              </tr>
+            </thead>
+            <tbody id="comparison-table-body">
+              <tr><td colspan="8" class="text-center">Loading comparison audit...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- TAB 5: ROSTER & DELEGATIONS -->
+    <section id="tab-users" class="tab-pane">
+      <div class="panel-split">
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Hospital Employee Roster</h2>
+            <span class="badge badge-accent">18 Synthetic Identities</span>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="users-table">
+              <thead>
+                <tr>
+                  <th>Emp ID</th>
+                  <th>Full Name</th>
+                  <th>Role</th>
+                  <th>Workforce Type</th>
+                  <th>Department</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="users-table-body">
+                <tr><td colspan="6" class="text-center">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="panel">
+          <div class="panel-header">
+            <h2>Active Shift Delegations</h2>
+            <span class="badge badge-accent">Accountable Authorization</span>
+          </div>
+          <div class="table-container">
+            <table class="data-table" id="delegations-table">
+              <thead>
+                <tr>
+                  <th>Shared Account</th>
+                  <th>Authorized Staff</th>
+                  <th>Shift Window</th>
+                  <th>Reason</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="delegations-table-body">
+                <tr><td colspan="5" class="text-center">Loading delegations...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- EVENT DETAIL MODAL / DRAWER -->
+  <div class="modal-overlay" id="event-detail-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div>
+          <h3 id="modal-event-id">Event Detail Inspection</h3>
+          <span class="text-dim" id="modal-timestamp">--</span>
+        </div>
+        <button class="modal-close" id="btn-close-modal">&times;</button>
+      </div>
+      
+      <div class="modal-body" id="modal-content">
+        <!-- Injected dynamically by app.js -->
+        <div class="loading-spinner">Loading event detail...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/app.js"></script>
+</body>
+</html>
