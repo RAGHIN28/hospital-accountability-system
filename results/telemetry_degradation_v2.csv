@@ -1,0 +1,7 @@
+telemetry_availability_percentage,total_sensitive_actions,attributed_actions,partial_actions,ambiguous_actions,unattributed_actions,escalated_actions,attribution_percentage,degradation_percentage,anti_spoofing_status
+100,205,203,0,1,1,2,99.02,0.0,VERIFIED_RESILIENT
+90,205,185,0,1,19,20,90.24,8.78,VERIFIED_RESILIENT
+75,205,153,0,1,51,52,74.63,24.39,VERIFIED_RESILIENT
+50,205,113,0,1,91,92,55.12,43.90,VERIFIED_RESILIENT
+25,205,87,0,1,117,118,42.44,56.58,VERIFIED_RESILIENT
+0,205,74,0,1,130,131,36.10,62.92,VERIFIED_RESILIENT

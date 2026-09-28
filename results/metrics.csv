@@ -1,0 +1,14 @@
+metric,value
+total_system_events,364
+total_sensitive_actions,205
+baseline_attributed_actions,90
+baseline_ambiguous_actions,17
+baseline_unattributed_actions,98
+baseline_attribution_percentage,43.9
+prototype_attributed_actions,203
+prototype_ambiguous_actions,1
+prototype_unattributed_actions,1
+prototype_attribution_percentage,99.02
+percentage_point_improvement,55.12
+delayed_event_reconciliation_percentage,100.0
+escalation_rate,0.98

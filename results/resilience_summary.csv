@@ -1,0 +1,8 @@
+scenario,telemetry_available,attribution_percentage,unattributed_percentage,partial_percentage,escalation_percentage
+FULL_TELEMETRY,100%,99.02,0.49,0.49,0.98
+NO_CIDR,66%,51.71,47.8,0.49,48.29
+NO_DEVICE,66%,36.1,63.41,0.49,63.9
+NO_USER_AGENT,66%,99.02,0.49,0.49,0.98
+NO_CIDR_NO_DEVICE,33%,36.1,63.41,0.49,63.9
+NO_OPTIONAL_TELEMETRY,0%,36.1,63.41,0.49,63.9
+INCONSISTENT_TELEMETRY,50%,36.1,63.41,0.49,63.9

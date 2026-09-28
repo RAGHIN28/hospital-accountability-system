@@ -1,0 +1,12 @@
+metric_name,measured_count,rate_percentage,quality_tier
+total_system_events_audited,364,100.0,NOMINAL
+synthetic_duplicate_presentation_rate,50,4.76,INJECTED_LOAD
+duplicate_events_rejected_at_boundary,50,100.0,DEFENSE_ACTIVE
+post_deduplication_duplicate_rate,0,0.0,ZERO_LEAKAGE
+malformed_event_rate,0,0.0,CONTROLLED
+missing_optional_field_rate,2,0.55,RESILIENT
+unknown_session_id_rate,1,0.27,RESILIENT
+simulated_late_event_rate,15,14.29,RECOVERED
+simulated_out_of_order_rate,85,80.95,SEQUENCED
+conflicting_delegation_rate,1,0.49,ESCALATED
+unresolved_action_rate,2,0.98,ESCALATED

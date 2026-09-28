@@ -1,0 +1,3 @@
+event_id,account,session,action,reason,available_evidence,missing_evidence,candidate_users,escalation_status
+EVT-00019,radiology_shared,SESS-ROGUE-01,EXPORT_PATIENT_RECORD,EXPIRED_DELEGATION,"Session SESS-ROGUE-01, IP 192.168.10.99, Device RAD-WS-UNKNOWN",Current authorization window,Dr. Priya Menon; Ravi Kumar; Karthik Raj; Lakshmi Narayanan,ESCALATED_TO_COMPLIANCE
+EVT-00115,lab_shared,SESS-EMP008-LAB-D1S1,VIEW_PATIENT_RECORD,CONFLICTING_DELEGATION,"Session SESS-EMP008-LAB-D1S1, IP 192.168.20.14, Device LAB-PC-02",Differentiating biometric/terminal evidence,Meena Joseph; Dinesh Chandran; Dr. Rajesh Varma,ESCALATED_TO_COMPLIANCE

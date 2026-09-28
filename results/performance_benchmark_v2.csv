@@ -1,0 +1,6 @@
+target_event_count,total_ingested_events,duplicate_events_rejected,out_of_order_events_sequenced,delayed_events_buffered,reconciled_events_count,total_processing_seconds,throughput_events_per_second,final_attribution_percentage,system_errors
+1000,1050,50,981,143,143,0.0982,10694.21,100.0,0
+5000,5250,250,4977,715,715,0.335,15669.62,100.0,0
+10000,10500,500,9971,1429,1429,0.7004,14992.32,100.0,0
+25000,26250,3972,22231,3572,3572,1.7659,14864.53,100.0,0
+50000,52500,19713,32710,7143,7143,2.9599,17737.04,100.0,0
