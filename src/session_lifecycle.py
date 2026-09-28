@@ -110,12 +110,17 @@ class SessionLifecycleManager:
         if session["status"] in [SessionState.ENDED, SessionState.TERMINATED]:
             return False, f"SESSION_{session['status']}", session
 
-        # Check for out-of-order activity timestamps
+        # Clinical Causality Check:
+        # Prevents clock-skewed or backdated logs from claiming validity under a session
+        # that was created subsequent to the clinical act.
         if activity_timestamp < session["created_at"]:
-            # Action occurred before session creation timestamp
             return False, "TIMESTAMP_BEFORE_SESSION_START", session
 
-        # Check timeout expiration
+        # Workstation Inactivity Timeout Check:
+        # Aligns with hospital workstation security policy (default: 30 minutes).
+        # Unattended clinical terminals that exceed the idle window are marked EXPIRED
+        # to prevent unauthorized shoulder-surfing actions from being falsely attributed
+        # to the previously logged-in clinician.
         inactivity_gap = activity_timestamp - session["last_activity"]
         if inactivity_gap > self.default_timeout:
             session["status"] = SessionState.EXPIRED
@@ -130,7 +135,9 @@ class SessionLifecycleManager:
             })
             return False, "SESSION_EXPIRED", session
 
-        # Active session: update activity
+        # Rolling Activity Refresh:
+        # Active clinical engagement extends session validity, ensuring working clinicians
+        # do not experience disruptive mid-procedure logouts while actively treating patients.
         session["last_activity"] = max(session["last_activity"], activity_timestamp)
         session["status"] = SessionState.ACTIVE
         return True, "ACTIVE", session

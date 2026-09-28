@@ -1,6 +1,6 @@
 # System Architecture & Technical Specification
 
-> **Hospital Accountability System — 35% Milestone Remediation**  
+> **Hospital Accountability System — Project Review #2 (70% Completion Milestone)**  
 > Accountable Shift Delegation, Session Attribution, Ingestion Buffering, and Compliance Escalation.
 
 ---

@@ -30,6 +30,13 @@ class EscalationManager:
     - Conflicting evidence or missing signals must NEVER result in automatic accusation.
     - Human compliance officers make final adjudication; the system provides structured evidence.
 
+    Why Ambiguous Cases Are Escalated Instead of Force-Attributed:
+    In clinical settings, false positive accusations damage professional reputations and
+    compromise staff trust. When evidence margins are below decision thresholds (e.g., competing
+    clinicians with identical workstation access), the system intentionally halts automated
+    resolution. Escalating preserves forensic integrity and provides hospital risk managers
+    with an untampered evidence dossier for independent corroboration.
+
     Seven Escalation Trigger Conditions:
     1. Multiple valid users match the same event (Ambiguous competing evidence).
     2. Required attribution evidence is missing.

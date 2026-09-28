@@ -12,6 +12,14 @@ if BASE_DIR not in sys.path:
 
 
 class SignalStrength:
+    """
+    Evidentiary grading tiers for forensic auditability:
+    - STRONG: Direct primary proof (valid shift delegation or explicit session token).
+    - SUPPORTING: Contextual indicators (hardware station match, IP subnet compatibility).
+    - MISSING: Expected telemetry or credential record is absent (degrades score).
+    - CONFLICTING: Multiple contradictory records detected (triggers human escalation).
+    - INSUFFICIENT: Cumulative evidence falls below decision confidence threshold (< 60 pts).
+    """
     STRONG = "STRONG"
     SUPPORTING = "SUPPORTING"
     MISSING = "MISSING"
@@ -23,6 +31,12 @@ class ExplainableEvidenceDossier:
     """
     Standardized, auditable evidence representation for sensitive clinical actions.
     Encapsulates multi-source signals and explains the attribution or escalation rationale.
+
+    Why this dossier architecture is required:
+    In healthcare compliance and legal inquiries, opaque probability scores are inadmissible.
+    Hospital risk managers require a deterministic, explainable dossier detailing exactly
+    which evidence was present, which signals were missing, and whether conflicting claims
+    existed at the timestamp of the privileged clinical transaction.
     """
 
     def __init__(

@@ -99,15 +99,25 @@ class DelegationLifecycleManager:
         return record
 
     def update_temporal_status(self, delegation_id: str, current_time: datetime) -> str:
-        """Update temporal state (CREATED -> ACTIVE -> EXPIRED) based on given timestamp."""
+        """
+        Update temporal state (CREATED -> ACTIVE -> EXPIRED) based on given timestamp.
+
+        Why dynamic temporal evaluation exists:
+        Rather than polling or pinning state to server clock, delegation validity is evaluated
+        against the action's event_timestamp. This allows asynchronous, out-of-order, or
+        batch-processed events to be adjudicated against their true temporal context.
+        """
         record = self.delegations.get(delegation_id)
         if not record:
             raise KeyError(f"Delegation {delegation_id} not found")
 
-        # Terminal states REVOKED and CANCELLED cannot be overridden by time passage
+        # Security Invariant: Terminal states REVOKED and CANCELLED cannot be overridden by time passage.
+        # Once revoked by a supervisor (e.g. following clinical reassignment or security suspension),
+        # an authorization must never re-activate even if the wall clock falls within the shift window.
         if record["status"] in [DelegationState.REVOKED, DelegationState.CANCELLED]:
             return record["status"]
 
+        # Inclusive boundary comparison: start_time and end_time are authorized down to the exact second.
         prev_status = record["status"]
         if current_time < record["start_time"]:
             new_status = DelegationState.CREATED

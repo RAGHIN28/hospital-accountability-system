@@ -63,6 +63,17 @@ class OperationalAlertManager:
         """
         Generates a new alert or suppresses duplicates if an active alert with
         matching dedupe_key already exists.
+
+        CLINICAL SOC RATIONALE:
+        In high-volume hospital environments (e.g., ICU/ER nursing stations), an anomalous
+        shared-account condition (such as an expired delegation token or unmapped IP subnet)
+        may trigger dozens of consecutive events in seconds. Without deduplication,
+        "alarm fatigue" causes SOC analysts to ignore critical alerts.
+        
+        The deduplication key groups related incidents while maintaining an occurrence
+        counter and updating `last_seen` timestamps, preserving forensic volume context
+        without flooding analyst queues.
+
         Returns: (is_new_alert, alert_record)
         """
         now = created_at or datetime.utcnow()

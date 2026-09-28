@@ -67,6 +67,10 @@ class IngestionBuffer:
         account = event.get("account_id") or event.get("username", "")
         action = event.get("action_id") or event.get("action", "")
         ip = event.get("ip_address") or event.get("source_ip", "")
+        # Why this hash composition is chosen:
+        # Volatile transport headers (e.g. packet arrival microsecond, TCP window) are excluded.
+        # Immutable clinical payload fields (event time, account, action, source IP, device, session)
+        # form a deterministic signature that detects identical replay events without false positives.
         dev = event.get("device_id", "")
         sess = event.get("session_id", "")
         payload = f"{ts_str}|{account}|{action}|{ip}|{dev}|{sess}"
@@ -170,6 +174,11 @@ class IngestionBuffer:
         """
         Sort all buffered events chronologically by event_timestamp (NOT arrival_timestamp)
         and clear the intake buffer.
+
+        Why event_timestamp is authoritative:
+        In intermittent clinical Wi-Fi (e.g. mobile crash carts, portable ultrasound),
+        arrival_timestamp reflects arbitrary network latency. Sorting strictly on
+        event_timestamp reconstructs the true clinical causal chain of care.
         """
         ordered_events = sorted(
             self.buffer.values(),
@@ -381,6 +390,11 @@ class IngestionBuffer:
         Locates pending events affected by newly registered context, re-evaluates them,
         updates the existing records in place, and preserves original event_id and event_timestamp.
         Returns the number of successfully reconciled events.
+
+        Why in-place update is strictly required:
+        Appending new rows during late reconciliation would distort action metrics, creating
+        spurious duplicates for a single clinical act (e.g. counting a narcotic dose twice).
+        Updating in-place maintains exact audit idempotency and preserves original timestamps.
         """
         if not self.pending_events:
             return 0

@@ -17,6 +17,12 @@ class NormalizedEvent:
     """
     Common Normalized Event Model across all disparate hospital sources.
     Preserves original raw attributes while standardizing clinical and forensic fields.
+
+    Why this canonical model is necessary:
+    In clinical hospital IT, different vendor systems (Epic EHR, Cerner LIS, Philips PACS,
+    Active Directory GINA, Cisco wireless controllers) emit logs in conflicting, non-standardized
+    JSON, syslog, and CSV formats. Normalizing to a canonical 17-field structure allows uniform
+    correlation while `raw_reference` retains the un-mutated original payload for forensic audit.
     """
 
     REQUIRED_FIELDS = ["event_id", "source", "event_type", "event_time", "shared_account", "action_type"]

@@ -57,8 +57,20 @@ class TamperEvidentAuditTrail:
     """
     Append-only tamper-evident audit ledger with SHA-256 cryptographic linkage.
 
+    Architectural and Regulatory Design Context:
+    Informed by the security principles of the HIPAA Security Rule (§ 164.312(b) Audit Controls)
+    and FDA 21 CFR Part 11 guidance on tamper-evident electronic audit records in healthcare,
+    audit trails must guarantee non-repudiation and withstand insider tampering. In this academic
+    proof-of-concept, an append-only cryptographic hash chain provides verifiable mathematical
+    tamper detection (implemented as an architectural design pattern; does not constitute formal
+    regulatory compliance certification).
+    
+    If an authorized user or compromised administrator attempts to alter historical attribution
+    logs to disguise unauthorized actions, the cryptographic hash chain immediately breaks at the
+    altered block index, exposing the tampering.
+
     Verification guarantees:
-    - Altering any historical field invalidates that record's hash.
+    - Altering any historical field invalidates that record's SHA-256 hash.
     - Deleting, inserting, or reordering any record breaks the previous_hash link.
     """
 

@@ -22,6 +22,11 @@ class MultiSourceIngestionEngine:
     3. SESSION_LOGS: Session start, refresh, and termination events.
     4. DELEGATION_LOGS: Shift authorization grants, renewals, and revocations.
     5. TELEMETRY_LOGS: Network flow metadata, IP subnet assignments, and device heartbeats.
+
+    Why multi-source ingestion is essential:
+    Single-source application logs (e.g. EHR audit trails) record only the shared account moniker
+    (e.g., 'radiology_shared'). None of the five streams individually proves human identity under
+    shared credentials; identity attribution emerges solely from cross-source temporal correlation.
     """
 
     def __init__(self):

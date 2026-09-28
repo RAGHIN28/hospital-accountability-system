@@ -49,6 +49,11 @@ st.markdown("""
 # Data loading helpers
 @st.cache_data
 def load_csv(path: str) -> pd.DataFrame:
+    """
+    Load CSV artifacts with caching to prevent disk I/O bottlenecks during UI interactions.
+    In this academic PoC, all evaluation metrics and test results are rendered directly
+    from verified reproducible CSV artifacts generated during Phase 1-9 benchmarking.
+    """
     if os.path.exists(path):
         return pd.read_csv(path)
     return pd.DataFrame()
@@ -82,6 +87,10 @@ st.markdown('<div class="main-title">🏥 Hospital Accountability System</div>',
 st.markdown('<div class="sub-title">Shared-Account Attribution & Compliance Review Console (Review #2 — 70% Milestone)</div>', unsafe_allow_html=True)
 
 # Sidebar: Role Selector (Demonstration Role Selector)
+# RATIONALE: Clinical environments require role-specific lenses (e.g. Compliance Officers
+# focus on escalations, SOC Analysts focus on anomalous alerts, and Auditors verify SHA-256 chains).
+# In this academic PoC, this selector toggles illustrative view perspectives without substituting
+# for enterprise SAML/OAuth2 production authentication.
 st.sidebar.title("Operational Role")
 active_role = st.sidebar.selectbox(
     "Select Inspection Persona:",
