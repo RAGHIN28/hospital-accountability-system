@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 import pandas as pd
 import streamlit as st
 
@@ -540,6 +541,39 @@ elif menu_selection == "13. Human Review":
         selected_case_id = st.selectbox("Select Incident to Adjudicate:", case_ids)
         case_row = escalation_df[escalation_df["case_id"] == selected_case_id].iloc[0]
 
+        from src.adjudication_persistence import AdjudicationPersistenceService
+
+        # Retrieve authoritative persisted adjudication state from SQLite
+        persisted = AdjudicationPersistenceService.get_adjudication_by_case(selected_case_id)
+        if not persisted:
+            persisted = AdjudicationPersistenceService.get_adjudication_by_event(case_row['event_id'])
+
+        if persisted:
+            st.markdown(
+                f'<div style="background-color: #ecfdf5; border: 1px solid #10b981; border-radius: 8px; padding: 12px; margin-bottom: 12px;">'
+                f'<strong>🛡️ Authoritative Persisted Adjudication (R3.3):</strong><br>'
+                f'<strong>Decision:</strong> <code>{persisted["decision"]}</code> &nbsp;|&nbsp; '
+                f'<strong>Reviewer:</strong> <code>{persisted["reviewer"]}</code> &nbsp;|&nbsp; '
+                f'<strong>Status:</strong> <span class="badge-success">{persisted["status"]}</span> &nbsp;|&nbsp; '
+                f'<strong>Version:</strong> <code>v{persisted["version"]}</code><br>'
+                f'<small style="color: #475569;">Last Persisted: {persisted["updated_at"]} UTC (Survives page refresh, rerun & server restart)</small>'
+                f'</div>',
+                unsafe_allow_html=True
+            )
+            default_decision = persisted["decision"]
+            default_notes = persisted["findings"]
+            default_reviewer = persisted["reviewer"]
+        else:
+            st.markdown(
+                '<div style="background-color: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 12px;">'
+                '<strong>⚪ Adjudication Status:</strong> No prior adjudication record in database. Awaiting initial compliance review.'
+                '</div>',
+                unsafe_allow_html=True
+            )
+            default_decision = "CONFIRM_IDENTITY"
+            default_notes = "Reviewed physical workstation sign-in sheet. Verified candidate."
+            default_reviewer = case_row.get("reviewer") if (case_row.get("reviewer") and case_row.get("reviewer") != "UNASSIGNED") else "Officer Elena Rostova"
+
         with st.expander(f"Review Dossier: {selected_case_id} ({case_row['event_id']})", expanded=True):
             cA, cB = st.columns(2)
             with cA:
@@ -551,13 +585,91 @@ elif menu_selection == "13. Human Review":
                 st.write(f"**Priority:** :red[{case_row['priority']}]")
                 st.write(f"**Reason:** `{case_row['reason_category']}`")
                 st.write(f"**Candidate Users:** `{case_row['candidate_users']}`")
-                st.write(f"**Status:** `{case_row['review_status']}`")
+                st.write(f"**Status:** `{persisted['status'] if persisted else case_row['review_status']}`")
 
             st.info(f"**Recommended Action:** {case_row['recommended_review']}")
-            decision = st.selectbox("Simulated Adjudication Decision:", ["CONFIRM_IDENTITY", "MARK_UNATTRIBUTED", "REQUEST_MORE_EVIDENCE", "DISMISS", "ESCALATE"])
-            notes = st.text_area("Compliance Review Findings:", "Reviewed physical workstation sign-in sheet. Verified candidate.")
-            if st.button("Submit Adjudication"):
-                st.success(f"Decision '{decision}' recorded and appended to cryptographic audit trail.")
+
+            allowed_decisions = ["CONFIRM_IDENTITY", "MARK_UNATTRIBUTED", "REQUEST_MORE_EVIDENCE", "DISMISS", "ESCALATE"]
+            sel_idx = allowed_decisions.index(default_decision) if default_decision in allowed_decisions else 0
+
+            col_rev1, col_rev2 = st.columns([1, 2])
+            with col_rev1:
+                reviewer_input = st.text_input("Compliance Reviewer:", value=default_reviewer, key=f"rev_{selected_case_id}")
+            with col_rev2:
+                decision = st.selectbox("Compliance Adjudication Decision:", allowed_decisions, index=sel_idx, key=f"dec_{selected_case_id}")
+
+            notes = st.text_area("Compliance Review Findings:", value=default_notes, height=100, key=f"notes_{selected_case_id}")
+
+            if st.button("Submit & Persist Adjudication", key=f"sub_{selected_case_id}"):
+                try:
+                    saved = AdjudicationPersistenceService.save_adjudication(
+                        case_id=selected_case_id,
+                        event_id=case_row['event_id'],
+                        decision=decision,
+                        reviewer=reviewer_input,
+                        findings=notes,
+                        evidence_reference=f"Escalation queue row: {selected_case_id}"
+                    )
+                    st.success(f"✅ Decision '{saved['decision']}' (Version: v{saved['version']}) successfully saved to persistent SQLite storage and appended to cryptographic audit trail.")
+                    st.rerun()
+                except Exception as exc:
+                    st.error(f"Persistence Error: {exc}")
+
+            st.markdown("---")
+            st.markdown("#### 📁 Forensic Compliance Audit Package Export (Review 3 — R3.2)")
+            st.caption("Generate complete evidentiary dossier with 12-section compliance verification in JSON and publication-grade PDF formats.")
+
+            from src.forensic_package import ForensicAuditPackageGenerator
+            pkg_gen = ForensicAuditPackageGenerator()
+
+            active_adjudication = {
+                "reviewer": reviewer_input,
+                "decision": decision,
+                "timestamp": (persisted["updated_at"] if persisted else datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")),
+                "notes": notes,
+                "version": persisted["version"] if persisted else 1,
+                "status": persisted["status"] if persisted else "SUBMITTED"
+            } if persisted else None
+
+            pkg = pkg_gen.generate_package(case_row['event_id'], human_adjudication=active_adjudication)
+            json_path = pkg_gen.export_json(pkg)
+            pdf_path = pkg_gen.export_pdf(pkg)
+
+            col_d1, col_d2 = st.columns(2)
+            with col_d1:
+                with open(json_path, "r", encoding="utf-8") as jf:
+                    json_bytes = jf.read()
+                st.download_button(
+                    label="⬇️ Export JSON Package",
+                    data=json_bytes,
+                    file_name=f"{selected_case_id}_forensic_package.json",
+                    mime="application/json",
+                    key=f"dl_json_{selected_case_id}",
+                    help="Deterministic 12-section compliance audit package in structured JSON format."
+                )
+            with col_d2:
+                with open(pdf_path, "rb") as pf:
+                    pdf_bytes = pf.read()
+                st.download_button(
+                    label="⬇️ Export PDF Package",
+                    data=pdf_bytes,
+                    file_name=f"{selected_case_id}_forensic_package.pdf",
+                    mime="application/pdf",
+                    key=f"dl_pdf_{selected_case_id}",
+                    help="Publication-grade compliance review dossier formatted with ReportLab."
+                )
+
+        # Facility-wide persistent adjudications overview
+        st.markdown("---")
+        st.subheader("Persistent Adjudication Records (SQLite Table: `human_adjudications`)")
+        all_adjudications = AdjudicationPersistenceService.list_adjudications()
+        if all_adjudications:
+            adj_display_df = pd.DataFrame(all_adjudications)[[
+                "case_id", "event_id", "decision", "reviewer", "status", "version", "updated_at"
+            ]]
+            st.dataframe(adj_display_df, use_container_width=True)
+        else:
+            st.info("No adjudication records currently persisted in SQLite database.")
 
 
 # ============================================================
@@ -634,6 +746,67 @@ elif menu_selection == "16. Scenario Validation":
         st.dataframe(scenario_df, use_container_width=True)
 
         st.success("All 8 Clinical Scenarios Passed (100% Scenario Pass Rate).")
+
+    st.markdown("---")
+    st.subheader("🔄 Multi-Ward Patient Transfer & Rotating Shift Simulation (Review 3 — R3.4)")
+    st.caption("Demonstrating accountability preservation across cross-ward patient transfers, rotating shifts, visiting specialists, and handoffs.")
+
+    from src.multi_ward_transfer import MultiWardTransferSimulationEngine
+    transfer_engine = MultiWardTransferSimulationEngine()
+    sim_data = transfer_engine.run_all_scenarios()
+
+    col_w1, col_w2, col_w3, col_w4 = st.columns(4)
+    with col_w1:
+        st.metric("Transfer Scenarios", f"{sim_data['passed_scenarios']}/{sim_data['total_scenarios']} Passed")
+    with col_w2:
+        st.metric("Actions Evaluated", sim_data["metrics"]["total_actions_evaluated"])
+    with col_w3:
+        st.metric("Reconciled Delayed", sim_data["metrics"]["reconciled_events"])
+    with col_w4:
+        st.metric("Escalated Conflicts", sim_data["metrics"]["escalated_cases"])
+
+    scenario_options = {
+        "Scenario A: Normal Cross-Ward Transfer (ED -> Radiology)": "SCENARIO_A",
+        "Scenario B: Shift Change During Transfer (Boundary at 15:00)": "SCENARIO_B",
+        "Scenario C: Shared Workstation Sequential Transition": "SCENARIO_C",
+        "Scenario D: Visiting Specialist Temporary Window": "SCENARIO_D",
+        "Scenario E: Intern Supervised Practice Delegation Boundary": "SCENARIO_E",
+        "Scenario F: Delayed Transfer Record In-Place Reconciliation": "SCENARIO_F",
+        "Scenario G: Missing In-Transit Telemetry Resilience": "SCENARIO_G",
+        "Scenario H: Conflicting Clinician Handoff (Compliance Escalation)": "SCENARIO_H",
+    }
+
+    selected_scen_label = st.selectbox("Inspect Multi-Ward Simulation Scenario:", list(scenario_options.keys()))
+    selected_scen_id = scenario_options[selected_scen_label]
+    scen_obj = next((s for s in sim_data["scenarios"] if s["scenario_id"] == selected_scen_id), None)
+
+    if scen_obj:
+        with st.expander(f"Simulation Dossier: {scen_obj['name']}", expanded=True):
+            st.markdown(f"**Description**: {scen_obj['description']}")
+            enc = scen_obj["encounter"]
+            c_e1, c_e2, c_e3 = st.columns(3)
+            with c_e1:
+                st.write(f"**Encounter ID:** `{enc['encounter_id']}`")
+                st.write(f"**Patient Identifier:** `{enc['patient_id']}` ({enc['mrn_synthetic']})")
+            with c_e2:
+                st.write(f"**Active Ward:** `{enc['current_ward']}`")
+                st.write(f"**Condition:** `{enc['condition']}`")
+            with c_e3:
+                st.write(f"**Transfers Recorded:** `{enc['total_transfers']}`")
+                st.write(f"**Simulation Status:** :green[PASSED]" if scen_obj["passed"] else ":red[FAILED]")
+
+            st.markdown("#### Clinical Actions & Attribution Outcomes")
+            action_rows = []
+            for r in scen_obj["results"]:
+                action_rows.append({
+                    "Event ID": r.get("event_id", "N/A"),
+                    "Attribution Status": r.get("status", "N/A"),
+                    "Attributed Clinician": r.get("attributed_user") or r.get("attributed_user_id") or "UNASSIGNED",
+                    "Confidence Level": r.get("confidence_level", "N/A"),
+                    "Score (pts)": f"{r.get('confidence_score', 0.0):.1f}" if r.get("confidence_score") is not None else "N/A",
+                    "Reason / Details": r.get("reason", "Evaluated against shift delegation and session bindings.")
+                })
+            st.dataframe(pd.DataFrame(action_rows), use_container_width=True)
 
 
 # ============================================================

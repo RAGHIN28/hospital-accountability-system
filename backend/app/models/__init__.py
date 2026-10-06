@@ -4,6 +4,7 @@ from app.models.authorization import SharedAccountAuthorization
 from app.models.system_log import SystemLog
 from app.models.privileged_action import PrivilegedAction
 from app.models.attribution_result import AttributionResult
+from app.models.adjudication import AdjudicationRecord
 
 __all__ = [
     "User",
@@ -12,4 +13,5 @@ __all__ = [
     "SystemLog",
     "PrivilegedAction",
     "AttributionResult",
+    "AdjudicationRecord",
 ]

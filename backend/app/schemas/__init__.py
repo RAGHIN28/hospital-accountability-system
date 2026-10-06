@@ -182,3 +182,25 @@ class MetricsBreakdown(BaseModel):
     confidence_distribution: Dict[str, int]
     failure_reasons: Dict[str, int]
     method_distribution: Dict[str, int]
+
+
+class AdjudicationBase(BaseModel):
+    case_id: str
+    event_id: str
+    decision: str
+    reviewer: str
+    findings: str
+    status: str = "SUBMITTED"
+    evidence_reference: Optional[str] = None
+
+
+class AdjudicationCreate(AdjudicationBase):
+    pass
+
+
+class AdjudicationResponse(AdjudicationBase):
+    id: int
+    version: int
+    created_at: datetime
+    updated_at: datetime
+    model_config = ConfigDict(from_attributes=True)

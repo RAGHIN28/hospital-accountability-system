@@ -1,8 +1,8 @@
 # Hospital Shared-Account Elimination & Accountable Action Attribution
 
-> **Milestone Status**: Project Review #2 (70% Completion Milestone) — **PASSED (91.15% Requirement Coverage)**  
-> **Attribution Accuracy**: **99.02%** on sensitive clinical actions (Baseline: **43.90%**, Net Lift: **+55.12%**)  
-> **Automated Test Suite**: **39 / 39 Passing (100.00% Pass Rate in 2.06s)**  
+> **Milestone Status**: Project Review #3 Comprehensive Suite — **PASSED (177/177 Tests Passing)**<br>
+> **Attribution Accuracy**: **99.02%** on sensitive clinical actions (Baseline: **43.90%**, Net Lift: **+55.12%**)<br>
+> **Automated Test Suite**: **177 / 177 Passing (100.00% Pass Rate in ~7.85s)**<br>
 > **Environment**: Academic Cybersecurity Proof-of-Concept (Local Python 3.11 / Streamlit / SQLite / 100% Synthetic Data)
 
 ---
@@ -12,7 +12,7 @@
 To ensure strict academic and evaluative rigor, this project explicitly decouples five distinct metrics:
 1. **Project Requirement Coverage**: **91.15%** (Evaluated from 25 requirements across 7 categories in `results/project_completion_matrix.csv`; Milestone Gate: $\ge 70.00\%$).
 2. **Sensitive-Action Attribution Accuracy**: **99.02%** (203 / 205 sensitive clinical actions resolved to individual identities).
-3. **Automated Test Suite Pass Rate**: **100.00%** (39 / 39 tests passing with zero regressions).
+3. **Automated Test Suite Pass Rate**: **100.00%** (177 / 177 tests passing with zero regressions).
 4. **Ingestion Peak Throughput**: **17,737 events/second** (Measured at 50,000 synthetic event scale).
 5. **Data Quality & Resilience**: **100.00%** reconciliation rate for delayed shift authorizations; graceful degradation down to 0% telemetry (36.10% attribution maintained solely on strong direct tokens/delegations; 131 actions safely escalated to human review).
 
@@ -221,7 +221,7 @@ python -m venv backend/.venv
 & "backend/.venv/Scripts/pip.exe" install -r backend/requirements.txt
 ```
 
-### Step 2: Run Full Automated Regression Test Suite (39 Tests Passing)
+### Step 2: Run Full Automated Regression Test Suite (177 Tests Passing)
 ```powershell
 & "backend/.venv/Scripts/python.exe" -m pytest -v
 ```
@@ -289,16 +289,23 @@ Measured directly on 205 sensitive clinical actions across 6 shared hospital acc
 
 ## 9. Technical Documentation Index
 
-For in-depth architectural and testing specifications, refer to the following documents in `docs/`:
+For in-depth architectural and testing specifications, refer to the following documents in `docs/` and `results/`:
 
 | Document | File Path | Focus Area |
 |---|---|---|
-| **Unit Testing & Test Mapping** | [`docs/testing.md`](file:///r:/COE%20PROJECT/docs/testing.md) | Granular test suite overview (39/39 passing), module mapping, failure test cases, and execution logs |
+| **Unit Testing & Test Mapping** | [`docs/testing.md`](file:///r:/COE%20PROJECT/docs/testing.md) | Granular test suite overview (177/177 passing), module mapping, failure test cases, and execution logs |
+| **Security & API Testing (R3.1)** | [`docs/security_testing.md`](file:///r:/COE%20PROJECT/docs/security_testing.md) | 10 API endpoints, parameterized query injection safety, HTTP 405 validation, defensive error handling |
+| **Forensic Audit Package (R3.2)** | [`docs/forensic_audit_package.md`](file:///r:/COE%20PROJECT/docs/forensic_audit_package.md) | 12-section evidentiary dossier, deterministic JSON export, publication-grade ReportLab PDF generation |
+| **Persistent Adjudication (R3.3)** | [`docs/adjudication_persistence.md`](file:///r:/COE%20PROJECT/docs/adjudication_persistence.md) | SQLite ACID persistence for human review decisions, cryptographic audit chain sync, schema validation |
+| **Multi-Ward Transfer Simulation (R3.4)** | [`docs/multi_ward_transfer_simulation.md`](file:///r:/COE%20PROJECT/docs/multi_ward_transfer_simulation.md) | 8 cross-ward clinical scenarios, rotating shift boundary handoffs, out-of-order & delayed transfer resilience |
 | **Error Boundaries & Resilience** | [`docs/error_handling.md`](file:///r:/COE%20PROJECT/docs/error_handling.md) | 15-condition error matrix, error taxonomy, degradation boundaries, and non-forcing fallback principle |
 | **System Architecture** | [`docs/architecture.md`](file:///r:/COE%20PROJECT/docs/architecture.md) | Architectural subsystems, data pipeline, cryptographic audit chaining, and state machines |
 | **Attribution Methodology** | [`docs/methodology.md`](file:///r:/COE%20PROJECT/docs/methodology.md) | Multi-signal weighting formulation, baseline comparison, and confidence calibration |
 | **Ethics & Limitations** | [`docs/ethics_and_limitations.md`](file:///r:/COE%20PROJECT/docs/ethics_and_limitations.md) | Ethical constraints, synthetic data boundaries, non-punitive governance, and legal considerations |
 | **Deployment Checklist** | [`docs/deployment_checklist.md`](file:///r:/COE%20PROJECT/docs/deployment_checklist.md) | Pre-deployment verification, operational preconditions, and security baseline checklist |
+| **Review 3 Artifact Inventory** | [`results/review3_artifact_inventory.md`](file:///r:/COE%20PROJECT/results/review3_artifact_inventory.md) | Complete 39-artifact classification (Required, Useful, Temporary) with retention recommendations |
+| **Review 3 Final Comprehensive Audit** | [`results/review3_final_audit.md`](file:///r:/COE%20PROJECT/results/review3_final_audit.md) | Final R3.1-R3.4 technical audit, canonical metric verification, test matrix, and reproducibility |
+| **Review 3 Final Acceptance Gate** | [`results/review3_final_acceptance_gate.md`](file:///r:/COE%20PROJECT/results/review3_final_acceptance_gate.md) | 14 formal acceptance gates evaluated against measured criteria (All PASS) |
 
 ---
 
@@ -314,9 +321,73 @@ For in-depth architectural and testing specifications, refer to the following do
 
 ---
 
-## 11. Remaining Work Toward Final Submission
+---
+
+## 11. Review 3 — Security, API Testing & Forensic Audit Packages
+
+### Scope & Work Package Architecture
+As part of Review 3, the prototype has undergone security hardening, comprehensive API boundary testing (R3.1), and exportable forensic compliance audit package implementation (R3.2):
+
+#### R3.1: Security Hardening & API Testing
+- **10 API Endpoints Audited & Tested**: `/api/health`, `/api/users`, `/api/shared-accounts`, `/api/delegations`, `/api/privileged-actions`, `/api/logs`, `/api/attribution/results`, `/api/attribution/metrics`, `/api/attribution/{event_id}`, and `/api/process-events`.
+- **Verified Security Controls**:
+  - SQLAlchemy prepared statement query parameterization preventing SQL injection across all query and path filters.
+  - Strict Pydantic and FastAPI query constraints (e.g. `limit <= 500`, `offset >= 0`, boolean validations).
+  - Explicit HTTP method enforcement (returning RFC 9110 compliant HTTP 405 Method Not Allowed for disallowed verbs).
+  - Defensive error containment returning clean JSON errors without leaking Python tracebacks, stack traces, local filesystem paths, or database connection strings.
+  - Non-forcing fallback preservation ensuring ambiguous attribution dossiers route to human review without automated guessing.
+  - Schema constraint integrity across all six SQLAlchemy models (unique indexes on `employee_id`, `username`, `event_id`, `action_name`, not-null enforcement, and transaction rollback recovery).
+
+#### R3.2: Exportable Forensic Compliance Audit Packages
+- **12-Section Evidentiary Dossier Engine (`src/forensic_package.py`)**:
+  - Aggregates event metadata, clinical context, candidate identity rankings, 5-signal scoring breakdowns, active shift delegations, session bindings, contextual telemetry (with explicit `MISSING` flags), chronological audit timeline, escalation records, and SHA-256 cryptographic chain validation.
+- **Dual Export Capabilities**:
+  - Structured, deterministic JSON export (`results/forensic_packages/<case_id>_forensic_package.json`).
+  - Publication-grade ReportLab PDF export (`results/forensic_packages/<case_id>_forensic_package.pdf`) with two-pass dynamic pagination, colored status badges, structured evidence tables, and ethical disclosures.
+- **Dashboard Integration**:
+  - Direct JSON and PDF export buttons integrated into Section 13 (Human Review) of the Streamlit compliance console.
+
+#### R3.3: Persistent Human Adjudication State
+- **ACID-Compliant SQLite Persistence Layer (`src/adjudication_persistence.py`)**:
+  - Implements `human_adjudications` table mapped to `AdjudicationRecord` SQLAlchemy model, replacing ephemeral in-memory Streamlit widget states with durable storage surviving reruns, browser refreshes, tab navigation, and application restarts.
+  - Enforces strict input validation: rejects unknown case IDs, unrecorded event IDs, unauthorized decision strings, empty reviewer identities, and oversized notes (>5,000 characters).
+  - Preserves canonical compliance decision taxonomy: `CONFIRM_IDENTITY`, `MARK_UNATTRIBUTED`, `REQUEST_MORE_EVIDENCE`, `DISMISS`, `ESCALATE`.
+  - Guarantees single authoritative record invariant per case while tracking sequential revision history via `version` counter and timestamps.
+- **Cryptographic Audit Chain Integration**:
+  - Automatically appends every adjudication creation or amendment (`HUMAN_REVIEW_CREATE_ADJUDICATION`, `HUMAN_REVIEW_AMEND_ADJUDICATION`) to the SHA-256 tamper-evident audit ledger (`src/audit_chain.py`).
+- **Forensic Package Auto-Resolution**:
+  - Automatically queried by `ForensicAuditPackageGenerator` (`src/forensic_package.py`) to embed persisted human review findings into generated JSON and PDF dossiers.
+- **Streamlit Console Integration (`dashboard/app.py` Section 13)**:
+  - Automatically loads persisted case status, pre-fills reviewer forms, renders verification badges, executes atomic persistence on submit, and displays facility-wide persistent adjudication logs.
+
+#### R3.4: Multi-Ward Patient Transfer & Rotating Shift Simulation
+- **Multi-Ward Transfer Simulation Engine (`src/multi_ward_transfer.py`)**:
+  - Implements `SyntheticPatientEncounter` and ward topology model across 6 synthetic wards (Emergency, Radiology, Laboratory, Pharmacy, Inpatient Ward, Intensive Care).
+  - Deterministically evaluates 8 clinical scenarios: normal cross-ward handoffs (Scenario A), rotating shift boundaries at 15:00 (Scenario B), shared workstation sequential transitions (Scenario C), visiting specialist temporary consult windows (Scenario D), intern supervised practice delegation boundaries (Scenario E), delayed transfer record in-place reconciliation (Scenario F), missing in-transit telemetry resilience (Scenario G), and conflicting clinician handoffs routed to compliance escalation (Scenario H).
+  - Enforces the non-forcing attribution principle: patient transfer or ward assignment never implies identity; insufficient (< 60 pts) or tied candidate scores preserve `UNATTRIBUTED` / `AMBIGUOUS`.
+  - Edge-case verification: validates pre-window, post-expiry, exact boundary, duplicate payloads, inverted arrival ordering, and unknown staff rejection.
+- **Streamlit Dashboard Integration (`dashboard/app.py` Section 16)**:
+  - Interactive Multi-Ward Transfer Simulation viewer rendering live metrics cards and detailed scenario dossiers.
+
+#### Automated Test Suite Status
+- Review 2 baseline tests: 39 / 39 passing.
+- Review 3 R3.1 security tests: 81 / 81 passing (`tests/test_api_security.py`).
+- Review 3 R3.2 forensic package tests: 16 / 16 passing (`tests/test_forensic_package.py`).
+- Review 3 R3.3 adjudication persistence tests: 20 / 20 passing (`tests/test_adjudication_persistence.py`).
+- Review 3 R3.4 multi-ward transfer tests: 21 / 21 passing (`tests/test_multi_ward_transfer.py`).
+- **Total Test Suite**: **177 / 177 passing (100% pass rate in ~7.85s)**.
+
+#### Known Limitations & Non-Production Disclaimer
+- This academic PoC is developed for research evaluation and architectural demonstration only.
+- It does **not** possess HIPAA Security Rule certification, FDA SaMD approval, ISO 27001 certification, or enterprise penetration-test signoff.
+- The database runs on local embedded SQLite rather than an enterprise clustered relational engine with table-level encryption and pgAudit.
+
+Detailed technical specifications are maintained in [`docs/security_testing.md`](file:///r:/COE%20PROJECT/docs/security_testing.md), [`docs/forensic_audit_package.md`](file:///r:/COE%20PROJECT/docs/forensic_audit_package.md), [`docs/adjudication_persistence.md`](file:///r:/COE%20PROJECT/docs/adjudication_persistence.md), [`docs/multi_ward_transfer_simulation.md`](file:///r:/COE%20PROJECT/docs/multi_ward_transfer_simulation.md), [`results/review3_forensic_audit_evidence.md`](file:///r:/COE%20PROJECT/results/review3_forensic_audit_evidence.md), [`results/review3_adjudication_evidence.md`](file:///r:/COE%20PROJECT/results/review3_adjudication_evidence.md), and [`results/review3_multi_ward_evidence.md`](file:///r:/COE%20PROJECT/results/review3_multi_ward_evidence.md).
+
+---
+
+## 12. Remaining Work Toward Final Submission
 
 The remaining scope toward final project submission includes:
-1. Exportable forensic compliance PDF audit packages for external hospital compliance auditors.
-2. In-memory interactive case adjudication state persistence to disk within the Streamlit UI.
-3. Expanded multi-ward patient transfer simulations across rotating shift boundaries.
+1. Final project report compilation and demonstration packaging.
+2. Comprehensive multi-ward scenario benchmark presentation slides.

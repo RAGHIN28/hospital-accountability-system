@@ -1,26 +1,30 @@
 # Automated Testing & Verification Suite
 
-> **Hospital Shared-Account Elimination & Accountable Action Attribution**  
-> **Milestone**: Project Review #2 (70% Completion Milestone Gate Exceeded)  
-> **Test Status**: **39 / 39 Passing (100.00% Pass Rate in 2.02s)**  
+> **Hospital Shared-Account Elimination & Accountable Action Attribution**<br>
+> **Milestone**: Project Review #3 Comprehensive Suite<br>
+> **Test Status**: **177 / 177 Passing (100.00% Pass Rate in ~7.85s)**<br>
 > **Test Framework**: `pytest` 9.1.1 on Python 3.11.0 (Windows / Unix)
 
 ---
 
 ## 1. Test Suite Architecture & Overview
 
-The automated regression suite provides complete coverage across the attribution engine, temporal lifecycles, cryptographic audit chains, operational alerting, and Review #1 technical remediation buffers. It consists of **39 unit and integration tests** distributed across 8 test modules:
+The automated regression suite provides complete coverage across the attribution engine, temporal lifecycles, cryptographic audit chains, operational alerting, security hardening (R3.1), forensic export packages (R3.2), persistent human adjudication (R3.3), and multi-ward shift simulations (R3.4). It consists of **177 unit and integration tests** distributed across 12 test modules:
 
 ```
 tests/
-├── test_attribution.py           (11 tests)  ── Core attribution, baseline comparisons, edge cases
-├── test_ingestion_buffer.py       (4 tests)  ── Time separation, delayed reconciliation, ordering
-├── test_telemetry_degradation.py  (5 tests)  ── Missing telemetry resilience, anti-spoofing
-├── test_escalation.py             (4 tests)  ── Human-in-the-loop triage, error taxonomy, dossiers
-├── test_delegation_lifecycle.py   (4 tests)  ── State transitions, temporal boundaries, revocation
-├── test_session_lifecycle.py      (5 tests)  ── Inactivity timeout, activity refresh, termination
-├── test_audit_chain.py            (4 tests)  ── SHA-256 block ledger, tamper & deletion detection
-└── test_alerts.py                 (2 tests)  ── Alert generation, deduplication, lifecycle states
+├── test_attribution.py              (11 tests)  ── Core attribution, baseline comparisons, edge cases
+├── test_ingestion_buffer.py          (4 tests)  ── Time separation, delayed reconciliation, ordering
+├── test_telemetry_degradation.py     (5 tests)  ── Missing telemetry resilience, anti-spoofing
+├── test_escalation.py                (4 tests)  ── Human-in-the-loop triage, error taxonomy, dossiers
+├── test_delegation_lifecycle.py      (4 tests)  ── State transitions, temporal boundaries, revocation
+├── test_session_lifecycle.py         (5 tests)  ── Inactivity timeout, activity refresh, termination
+├── test_audit_chain.py               (4 tests)  ── SHA-256 block ledger, tamper & deletion detection
+├── test_alerts.py                    (2 tests)  ── Alert generation, deduplication, lifecycle states
+├── test_api_security.py             (81 tests)  ── R3.1: REST API validation, SQLi/path traversal, 404/405
+├── test_forensic_package.py         (16 tests)  ── R3.2: 12-section JSON/PDF forensic audit package exports
+├── test_adjudication_persistence.py (20 tests)  ── R3.3: SQLite persistence, audit-chain sync, validation
+└── test_multi_ward_transfer.py      (21 tests)  ── R3.4: 8 clinical transfer scenarios & shift boundaries
 ```
 
 ### Execution Command:
@@ -32,32 +36,24 @@ tests/
 ```text
 ============================= test session starts =============================
 platform win32 -- Python 3.11.0, pytest-9.1.1, pluggy-1.6.0
-collected 39 items
+collected 177 items
 
-tests/test_alerts.py::test_alert_generation_and_deduplication PASSED     [  2%]
-tests/test_alerts.py::test_alert_lifecycle_flow PASSED                   [  5%]
-tests/test_attribution.py::test_normal_shared_account_attribution PASSED [  7%]
-tests/test_attribution.py::test_direct_named_user_attribution PASSED     [ 10%]
-tests/test_attribution.py::test_multiple_authorized_users_baseline_ambiguous PASSED [ 12%]
-tests/test_attribution.py::test_expired_delegation_unattributed PASSED   [ 15%]
-tests/test_attribution.py::test_missing_session_id_resilience PASSED     [ 17%]
-tests/test_attribution.py::test_duplicate_event_detection PASSED         [ 20%]
-tests/test_attribution.py::test_unknown_shared_account PASSED            [ 23%]
-tests/test_attribution.py::test_inactive_user_disqualification PASSED    [ 25%]
-tests/test_attribution.py::test_missing_delegation_source_graceful_handling PASSED [ 28%]
-tests/test_attribution.py::test_invalid_log_event PASSED                 [ 30%]
-tests/test_attribution.py::test_metrics_calculation_formula PASSED       [ 33%]
-tests/test_audit_chain.py::test_audit_chain_valid_append_and_verification PASSED [ 35%]
-tests/test_audit_chain.py::test_audit_chain_detects_modified_record PASSED [ 38%]
-tests/test_audit_chain.py::test_audit_chain_detects_broken_previous_hash_link PASSED [ 41%]
-tests/test_audit_chain.py::test_audit_chain_detects_deleted_or_reordered_record PASSED [ 43%]
-tests/test_delegation_lifecycle.py::test_delegation_normal_activation_and_temporal_states PASSED [ 46%]
-tests/test_delegation_lifecycle.py::test_delegation_revocation PASSED    [ 48%]
-tests/test_delegation_lifecycle.py::test_delegation_cancellation PASSED  [ 51%]
-tests/test_delegation_lifecycle.py::test_delegation_boundary_timestamps PASSED [ 53%]
-tests/test_escalation.py::test_conflicting_delegation_creates_escalation PASSED [ 56%]
-tests/test_escalation.py::test_missing_roster_creates_escalation PASSED  [ 58%]
-tests/test_escalation.py::test_expired_delegation_creates_escalation PASSED [ 61%]
+tests/test_adjudication_persistence.py ....................              [ 11%]
+tests/test_alerts.py ..                                                  [ 12%]
+tests/test_api_security.py ............................................. [ 37%]
+....................................                                     [ 58%]
+tests/test_attribution.py ...........                                    [ 64%]
+tests/test_audit_chain.py ....                                           [ 66%]
+tests/test_delegation_lifecycle.py ....                                  [ 68%]
+tests/test_escalation.py ....                                            [ 71%]
+tests/test_forensic_package.py ................                          [ 80%]
+tests/test_ingestion_buffer.py ....                                      [ 82%]
+tests/test_multi_ward_transfer.py .....................                  [ 94%]
+tests/test_session_lifecycle.py .....                                    [ 97%]
+tests/test_telemetry_degradation.py .....                                [100%]
+
+======================= 177 passed, 2 warnings in 7.85s =======================
+```
 tests/test_escalation.py::test_escalation_record_contains_required_evidence PASSED [ 64%]
 tests/test_ingestion_buffer.py::test_delayed_event_enters_pending_buffer PASSED [ 66%]
 tests/test_ingestion_buffer.py::test_late_delegation_reconciles_same_event_without_duplicate PASSED [ 69%]
@@ -180,10 +176,11 @@ The test suite systematically probes boundary and failure conditions to guarante
 
 ## 5. Test Execution Evidence & Regression Summary
 
-- **Total Test Cases**: **39**
-- **Passing**: **39 (100.00%)**
+- **Total Test Cases**: **177**
+- **Passing**: **177 (100.00%)**
 - **Failing**: **0**
 - **Skipped / XFailed**: **0**
+- **Warnings**: **2** (deprecations in external Starlette test client library)
 - **Suite Execution Platform**: Windows 10 / Python 3.11.0 / `pytest-9.1.1`
-- **Execution Wall Time**: **2.02 seconds**
-- **Regression Status**: **ZERO REGRESSIONS** against Review #1 baseline tests (24 baseline tests preserved, 15 Review #2 verification tests added).
+- **Execution Wall Time**: **~7.85 seconds**
+- **Regression Status**: **ZERO REGRESSIONS** across all Review 1, Review 2, and Review 3 work packages (39 Review 2 baseline tests + 81 R3.1 API security tests + 16 R3.2 forensic package tests + 20 R3.3 persistent adjudication tests + 21 R3.4 multi-ward transfer simulation tests).

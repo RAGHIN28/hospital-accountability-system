@@ -1,0 +1,367 @@
+{
+  "metadata": {
+    "package_version": "1.0.0",
+    "case_id": "CASE-EVT-00019",
+    "event_id": "EVT-00019",
+    "generated_at": "2026-10-06T05:20:43Z",
+    "generator": "Hospital Shared-Account Forensic Audit Package Generator (Review 3 — R3.2)",
+    "classification": "CONFIDENTIAL / COMPLIANCE AUDIT EVIDENCE (SYNTHETIC POC)"
+  },
+  "event_details": {
+    "event_id": "EVT-00019",
+    "event_timestamp": "2026-09-01 03:15:00",
+    "arrival_timestamp": "2026-09-28 08:37:04",
+    "account_username": "radiology_shared",
+    "is_shared_account": true,
+    "shared_account_info": {
+      "system_name": "PACS / RIS Core",
+      "department": "Radiology",
+      "account_type": "DEPARTMENTAL_WORKSTATION",
+      "risk_level": "HIGH",
+      "status": "ACTIVE"
+    },
+    "action": "EXPORT_PATIENT_RECORD",
+    "is_privileged_action": true,
+    "sensitivity_level": "CRITICAL",
+    "action_description": "Bulk export or download of clinical health records",
+    "source_system": "PACS_CORE_01",
+    "source_ip": "192.168.10.99",
+    "device_id": "RAD-WS-UNKNOWN",
+    "session_id": "SESS-ROGUE-01",
+    "target_type": "PATIENT_RECORD",
+    "target_id": "SYN-PAT-9999",
+    "success": true,
+    "raw_event_hash": "c47b1bf2b271bf0276f8bf649f6e30ff243d065e57c32018965cc1ac4b0fe11d",
+    "processing_status": "PROCESSED"
+  },
+  "candidate_identity": {
+    "attribution_status": "UNATTRIBUTED",
+    "attribution_method": "UNRESOLVED",
+    "confidence_score": 30.0,
+    "confidence_level": "UNATTRIBUTED",
+    "attributed_user": null,
+    "baseline_attribution": {
+      "status": "UNATTRIBUTED",
+      "user": null,
+      "confidence": 0.0,
+      "explanation": "Baseline Rule: All delegations for this shared account have expired before event timestamp."
+    },
+    "candidates_evaluated": [
+      {
+        "rank": 1,
+        "employee_id": "EMP002",
+        "full_name": "Dr. Priya Menon",
+        "role": "Chief Radiologist",
+        "department": "Radiology",
+        "total_score": 30.0,
+        "delegation_score": 0.0,
+        "session_score": 0.0,
+        "device_score": 15.0,
+        "ip_score": 10.0,
+        "department_score": 5.0,
+        "matched_signals": [
+          "Device Station Match 'RAD-WS-UNKNOWN' (+15)",
+          "IP Subnet Match '192.168.10.99' (+10)",
+          "Department Alignment (Radiology) (+5)"
+        ],
+        "missed_signals": [
+          "Active Delegation Window",
+          "Session Match"
+        ]
+      },
+      {
+        "rank": 2,
+        "employee_id": "EMP003",
+        "full_name": "Ravi Kumar",
+        "role": "Radiology Technologist",
+        "department": "Radiology",
+        "total_score": 30.0,
+        "delegation_score": 0.0,
+        "session_score": 0.0,
+        "device_score": 15.0,
+        "ip_score": 10.0,
+        "department_score": 5.0,
+        "matched_signals": [
+          "Device Station Match 'RAD-WS-UNKNOWN' (+15)",
+          "IP Subnet Match '192.168.10.99' (+10)",
+          "Department Alignment (Radiology) (+5)"
+        ],
+        "missed_signals": [
+          "Active Delegation Window",
+          "Session Match"
+        ]
+      },
+      {
+        "rank": 3,
+        "employee_id": "EMP005",
+        "full_name": "Karthik Raj",
+        "role": "Radiology Resident Intern",
+        "department": "Radiology",
+        "total_score": 30.0,
+        "delegation_score": 0.0,
+        "session_score": 0.0,
+        "device_score": 15.0,
+        "ip_score": 10.0,
+        "department_score": 5.0,
+        "matched_signals": [
+          "Device Station Match 'RAD-WS-UNKNOWN' (+15)",
+          "IP Subnet Match '192.168.10.99' (+10)",
+          "Department Alignment (Radiology) (+5)"
+        ],
+        "missed_signals": [
+          "Active Delegation Window",
+          "Session Match"
+        ]
+      },
+      {
+        "rank": 4,
+        "employee_id": "EMP017",
+        "full_name": "Lakshmi Narayanan",
+        "role": "Radiology Staff Assistant",
+        "department": "Radiology",
+        "total_score": 30.0,
+        "delegation_score": 0.0,
+        "session_score": 0.0,
+        "device_score": 15.0,
+        "ip_score": 10.0,
+        "department_score": 5.0,
+        "matched_signals": [
+          "Device Station Match 'RAD-WS-UNKNOWN' (+15)",
+          "IP Subnet Match '192.168.10.99' (+10)",
+          "Department Alignment (Radiology) (+5)"
+        ],
+        "missed_signals": [
+          "Active Delegation Window (Expired)",
+          "Session Match"
+        ]
+      }
+    ],
+    "explanation": "Insufficient evidence to reliably attribute shared account 'radiology_shared' (Top candidate Dr. Priya Menon achieved only 30.0/100 points, threshold 60 required). Reason: Expired authorization."
+  },
+  "evidence_breakdown": {
+    "decision_threshold": 60.0,
+    "total_achieved_score": 30.0,
+    "signals": [
+      {
+        "signal_name": "Active Shift Delegation",
+        "weight_max": 40.0,
+        "score_achieved": 0.0,
+        "status": "EXPIRED",
+        "details": "No active delegation covering transaction timestamp."
+      },
+      {
+        "signal_name": "Session Token Binding",
+        "weight_max": 30.0,
+        "score_achieved": 0.0,
+        "status": "SUPPORTING",
+        "details": "Session ID 'SESS-ROGUE-01' bound to workstation terminal."
+      },
+      {
+        "signal_name": "Workstation Device Affinity",
+        "weight_max": 15.0,
+        "score_achieved": 15.0,
+        "status": "SUPPORTING",
+        "details": "Hardware station fingerprint 'RAD-WS-UNKNOWN'."
+      },
+      {
+        "signal_name": "IP Subnet Compatibility",
+        "weight_max": 10.0,
+        "score_achieved": 10.0,
+        "status": "SUPPORTING",
+        "details": "Source network IP '192.168.10.99' within department CIDR."
+      },
+      {
+        "signal_name": "Department Roster Match",
+        "weight_max": 5.0,
+        "score_achieved": 5.0,
+        "status": "SUPPORTING",
+        "details": "Clinical department: 'Radiology'."
+      }
+    ]
+  },
+  "delegation_evidence": {
+    "delegations_count": 8,
+    "has_active_delegation": false,
+    "active_delegation": null,
+    "all_associated_delegations": [
+      {
+        "delegation_id": "DEL-0001",
+        "user_id": 3,
+        "staff_name": "Ravi Kumar",
+        "employee_id": "EMP003",
+        "authorized_from": "2026-09-01 08:00:00",
+        "authorized_until": "2026-09-01 16:00:00",
+        "reason": "Morning Radiology Tech Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0002",
+        "user_id": 2,
+        "staff_name": "Dr. Priya Menon",
+        "employee_id": "EMP002",
+        "authorized_from": "2026-09-01 14:00:00",
+        "authorized_until": "2026-09-01 18:00:00",
+        "reason": "Specialist CT/MRI Review Shift (Overlap with Tech)",
+        "approved_by": "Medical Director",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0003",
+        "user_id": 3,
+        "staff_name": "Ravi Kumar",
+        "employee_id": "EMP003",
+        "authorized_from": "2026-09-02 08:00:00",
+        "authorized_until": "2026-09-02 16:00:00",
+        "reason": "Morning Radiology Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0004",
+        "user_id": 5,
+        "staff_name": "Karthik Raj",
+        "employee_id": "EMP005",
+        "authorized_from": "2026-09-02 16:00:00",
+        "authorized_until": "2026-09-02 23:00:00",
+        "reason": "Evening Resident On-Call Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0005",
+        "user_id": 3,
+        "staff_name": "Ravi Kumar",
+        "employee_id": "EMP003",
+        "authorized_from": "2026-09-03 09:00:00",
+        "authorized_until": "2026-09-03 17:00:00",
+        "reason": "Day Ultrasound & X-Ray Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0006",
+        "user_id": 5,
+        "staff_name": "Karthik Raj",
+        "employee_id": "EMP005",
+        "authorized_from": "2026-09-03 10:00:00",
+        "authorized_until": "2026-09-03 15:00:00",
+        "reason": "Resident Fluoroscopy Training Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0007",
+        "user_id": 17,
+        "staff_name": "Lakshmi Narayanan",
+        "employee_id": "EMP017",
+        "authorized_from": "2026-09-03 11:00:00",
+        "authorized_until": "2026-09-03 14:00:00",
+        "reason": "Emergency Trauma Overflow Support",
+        "approved_by": "Dr. Priya Menon",
+        "status": "ACTIVE",
+        "is_covering_event": false
+      },
+      {
+        "delegation_id": "DEL-0025",
+        "user_id": 17,
+        "staff_name": "Lakshmi Narayanan",
+        "employee_id": "EMP017",
+        "authorized_from": "2026-08-26 16:00:00",
+        "authorized_until": "2026-08-26 08:00:00",
+        "reason": "Previous Month Temporary Shift",
+        "approved_by": "Dr. Priya Menon",
+        "status": "EXPIRED",
+        "is_covering_event": false
+      }
+    ]
+  },
+  "session_evidence": {
+    "session_id": "SESS-ROGUE-01",
+    "session_present": true,
+    "session_lifecycle_state": "ACTIVE",
+    "notes": "Session string 'SESS-ROGUE-01' bound to terminal."
+  },
+  "telemetry_evidence": {
+    "device": {
+      "device_id": "RAD-WS-UNKNOWN",
+      "status": "PRESENT"
+    },
+    "network": {
+      "source_ip": "192.168.10.99",
+      "subnet_prefix": "192.168.10.",
+      "status": "PRESENT"
+    },
+    "user_agent": "MISSING",
+    "department": "Radiology"
+  },
+  "chronological_timeline": [
+    {
+      "timestamp": "2026-09-01 03:03:00",
+      "phase": "SESSION_INIT",
+      "actor": "radiology_shared",
+      "description": "Workstation session 'SESS-ROGUE-01' initialized on terminal RAD-WS-UNKNOWN"
+    },
+    {
+      "timestamp": "2026-09-01 03:15:00",
+      "phase": "CLINICAL_ACTION",
+      "actor": "radiology_shared",
+      "description": "Privileged action 'EXPORT_PATIENT_RECORD' executed on target 'PATIENT_RECORD:SYN-PAT-9999'"
+    },
+    {
+      "timestamp": "2026-09-01 03:15:00",
+      "phase": "COMPLIANCE_ESCALATION",
+      "actor": "ESCALATION_MANAGER",
+      "description": "Case escalated to Compliance Review Queue (Priority: HIGH)"
+    },
+    {
+      "timestamp": "2026-09-28 08:37:04",
+      "phase": "INGESTION_RECORDED",
+      "actor": "INGESTION_BUFFER",
+      "description": "Audit record ingested; SHA-256 hash verified: c47b1bf2b271bf02..."
+    },
+    {
+      "timestamp": "2026-09-28 08:37:04",
+      "phase": "ATTRIBUTION_DECISION",
+      "actor": "PROTOTYPE_ENGINE",
+      "description": "Attribution evaluated: UNATTRIBUTED (30.0 pts, UNATTRIBUTED)"
+    }
+  ],
+  "escalation_details": {
+    "is_escalated": true,
+    "escalation_id": "CASE-EVT-00019",
+    "priority": "HIGH",
+    "reason_category": "UNRESOLVED_ACTION",
+    "recommended_action": "Verify physical workstation badge tap or departmental sign-in sheet.",
+    "current_status": "UNATTRIBUTED"
+  },
+  "audit_chain_verification": {
+    "chain_record_id": "AUDIT-000001",
+    "tamper_evident_status": "VERIFIED_VALID",
+    "record_hash": "1afeb1eb70efb91e3c5fcd34c2615f77e76f30b8bf47a49a179aeed805856dea",
+    "previous_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+    "algorithm": "SHA-256 Linkage",
+    "status_message": "CHAIN_VALID"
+  },
+  "human_review": {
+    "review_recorded": false,
+    "reviewer": "UNASSIGNED",
+    "decision": "PENDING_REVIEW",
+    "timestamp": "N/A",
+    "notes": "Awaiting compliance officer review."
+  },
+  "limitations_and_disclaimer": {
+    "academic_poc": true,
+    "synthetic_data_only": true,
+    "intent_disclaimer": "Machine attribution represents probabilistic correlation of system telemetry and does not establish legal intent or disciplinary fault.",
+    "telemetry_disclaimer": "Network and device identifiers are supporting evidence only and do not constitute independent identity verification.",
+    "human_in_the_loop_requirement": "All ambiguous or unverified clinical actions mandate independent investigation by authorized hospital compliance personnel.",
+    "regulatory_disclaimer": "This academic prototype is not certified under HIPAA Security Rule (45 CFR § 164.312), FDA 21 CFR Part 11, or ISO 27001 standards."
+  }
+}
